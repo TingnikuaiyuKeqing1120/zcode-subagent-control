@@ -10,6 +10,7 @@ import (
 	"github.com/wailsapp/wails/v3/pkg/application"
 
 	"zcode-subagent-control/internal/agentfile"
+	"zcode-subagent-control/internal/sessionmode"
 	"zcode-subagent-control/internal/zconfig"
 )
 
@@ -225,6 +226,18 @@ func (a *API) Validate(ag agentfile.Agent) []Issue {
 		soft("非内置工具名（确认存在再保存）: " + strings.Join(unknown, ", "))
 	}
 	return issues
+}
+
+// ---------- 会话模式覆盖（持久化执行状态） ----------
+
+// ListSessionModes 列出 ZCode 全部有执行状态记录的会话及其持久化模式。
+func (a *API) ListSessionModes() ([]sessionmode.SessionModeInfo, error) {
+	return sessionmode.List()
+}
+
+// SetSessionMode 覆盖目标会话的持久化模式（下次该会话恢复/重启 ZCode 后生效）。
+func (a *API) SetSessionMode(sessionID, mode string) error {
+	return sessionmode.Set(sessionID, mode)
 }
 
 // ---------- 窗口控制（悬浮面板） ----------

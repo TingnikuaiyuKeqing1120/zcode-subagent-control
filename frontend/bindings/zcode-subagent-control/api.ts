@@ -17,6 +17,9 @@ import { Call as $Call, CancellablePromise as $CancellablePromise } from "@wails
 import * as agentfile$0 from "./internal/agentfile/models.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore: Unused imports
+import * as sessionmode$0 from "./internal/sessionmode/models.js";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore: Unused imports
 import * as zconfig$0 from "./internal/zconfig/models.js";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -73,6 +76,13 @@ export function ListAgents(): $CancellablePromise<agentfile$0.Summary[] | null> 
 }
 
 /**
+ * ListSessionModes 列出 ZCode 全部有执行状态记录的会话及其持久化模式。
+ */
+export function ListSessionModes(): $CancellablePromise<sessionmode$0.SessionModeInfo[] | null> {
+    return $Call.ByID(241681060);
+}
+
+/**
  * Meta 返回表单下拉选项（模型、模式、工具、技能、内置智能体）。
  */
 export function Meta(): $CancellablePromise<zconfig$0.Meta | null> {
@@ -98,6 +108,13 @@ export function SetAllPermissionModes(mode: string): $CancellablePromise<number>
  */
 export function SetPermissionMode(fileName: string, mode: string): $CancellablePromise<agentfile$0.Summary> {
     return $Call.ByID(2856165496, fileName, mode);
+}
+
+/**
+ * SetSessionMode 覆盖目标会话的持久化模式（下次该会话恢复/重启 ZCode 后生效）。
+ */
+export function SetSessionMode(sessionID: string, mode: string): $CancellablePromise<void> {
+    return $Call.ByID(1480478743, sessionID, mode);
 }
 
 /**

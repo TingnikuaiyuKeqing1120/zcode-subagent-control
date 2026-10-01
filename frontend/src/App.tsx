@@ -17,6 +17,7 @@ import type { Summary } from '../bindings/zcode-subagent-control/internal/agentf
 import type { Meta as MetaModel } from '../bindings/zcode-subagent-control/internal/zconfig/models'
 import type { Issue } from '../bindings/zcode-subagent-control/models'
 import { AgentModePill, ModePill } from './components/ModePicker'
+import SessionModePanel from './components/SessionModePanel'
 
 // ---------- 本地草案类型（与 Go 的 agentfile.Agent JSON 结构一一对应） ----------
 
@@ -140,6 +141,7 @@ function App() {
   const [thoughtLevels, setThoughtLevels] = useState<string[]>([])
   const [filter, setFilter] = useState('')
   const [floatVisible, setFloatVisible] = useState(false)
+  const [sessionPanelOpen, setSessionPanelOpen] = useState(false)
   const [toast, setToast] = useState<{ kind: 'ok' | 'err'; msg: string } | null>(null)
   const [busy, setBusy] = useState(false)
   const toastTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
@@ -326,6 +328,13 @@ function App() {
             }}
           >
             ◈ 悬浮速切{floatVisible ? '（已开）' : ''}
+          </button>
+          <button
+            className="btn btn-ghost"
+            title="覆盖任意会话（含子智能体）的持久化权限模式，下次恢复/重启后生效"
+            onClick={() => setSessionPanelOpen(true)}
+          >
+            ⚙️ 会话模式覆盖
           </button>
           <button className="btn btn-danger" onClick={() => switchMode('yolo', 'all')}>
             全部 → 完全访问
@@ -749,6 +758,7 @@ function App() {
       </div>
 
       {toast && <div className={`toast ${toast.kind}`}>{toast.msg}</div>}
+      {sessionPanelOpen && <SessionModePanel onClose={() => setSessionPanelOpen(false)} />}
     </div>
   )
 }
