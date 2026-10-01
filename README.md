@@ -110,3 +110,29 @@ frontend/
 tools/disallowedTools/skills/permissionMode/maxTurns/background/injectAgentsMd/
 mcpServers）在本工具中全部可编辑；官方特有的「插件贡献的 agents」「内置模型覆盖」
 只做只读展示。
+
+## ⚠️ 权限模式的真实语义（2026-10-02 源码级确认）
+
+翻 ZCode 开源源码（zai-org/ZCode）确认：**交互式子智能体的审批开关是主会话的实时
+模式，不是 agent 文件里的 permissionMode**。源码 `resolveSubagentPermissionMode`
+（apps/zcode-cli/packages/core/src/runtime/methods/subagent.ts）：
+
+```ts
+switch (permissionMode) {   // = agent 文件里的档位
+  case "auto": return "auto";
+  case "plan": return "plan";
+  case undefined: return builtInExplore ? "yolo" : parentMode;  // 内置 Explore 未设置时 yolo
+  default: return parentMode;   // 其余全部（yolo/default/edit/build/acceptEdits/bypassPermissions/dontAsk/autoEdit）= 主会话模式
+}
+```
+
+实测三轮全部吻合（主 yolo + 文件 default → 不弹；主 build + 文件 default → 弹）。
+**结论：想让交互式子智能体免确认，切主会话的选择器；agent 文件的档位只有 `plan`
+能强制生效。**
+
+**`auto`（自动模式）是保留未实现**：权限服务里 `mode === "auto"` 直接 deny，
+错误码 `mode.auto.unimplemented`（"Auto mode is reserved but not implemented yet"）。
+**任何角色设成 auto，它的全部工具调用都会被拒**（不是弹窗，是直接报错）——本工具
+的候选列表里保留 auto 仅供忠实呈现客户端取值，选前须知此坑。
+另外子会话在**派生那一刻**定格模式，之后改主会话或改文件都不影响正在跑的实例，
+要重新派生。
