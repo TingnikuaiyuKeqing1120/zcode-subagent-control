@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Name=My Product
+Comment=A zcode-subagent-control application
+# The Exec line includes %u to pass the URL to the application
+Exec=/usr/local/bin/zcode-subagent-control.exe %u
+Terminal=false
+Type=Application
+Icon=zcode-subagent-control.exe
+Categories=Utility;
+StartupWMClass=zcode-subagent-control.exe
+
+ 
