@@ -191,6 +191,10 @@ func (a *API) Validate(ag agentfile.Agent) []Issue {
 	if ag.PermissionMode != nil && *ag.PermissionMode != "" && !validMode(*ag.PermissionMode) {
 		hard(fmt.Sprintf("权限模式 %q 不在客户端支持的取值内", *ag.PermissionMode))
 	}
+	if ag.PermissionMode != nil && *ag.PermissionMode == "auto" {
+		// 源码实证：mode.auto.unimplemented，auto 是保留未实现，选中即全拒
+		hard("auto 是保留未实现（mode.auto.unimplemented）：设为 auto 后该角色的全部工具调用都会被客户端拒绝，请改用 yolo/edit/default 等档位")
+	}
 	if ag.Color != nil && *ag.Color != "" && !knownValue(*ag.Color, agentfile.Colors) {
 		hard(fmt.Sprintf("颜色 %q 不在白名单（%s）", *ag.Color, strings.Join(agentfile.Colors, "/")))
 	}

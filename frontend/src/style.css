@@ -957,3 +957,22 @@ textarea {
   color: var(--text);
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
 }
+
+/* auto 档位危险标识（保留未实现，选中即全拒） */
+.mode-pop-item.danger-item {
+  border: 1px solid rgba(255, 92, 108, 0.45);
+  background: var(--red-soft);
+}
+
+.mode-pop-item.danger-item .mpi-title {
+  color: var(--red);
+}
+
+.mode-card.danger-mode {
+  border-style: dashed;
+  opacity: 0.75;
+}
+
+.mode-card.danger-mode .mode-value::after {
+  content: " ⛔";
+}

@@ -403,7 +403,14 @@ function App() {
                   {(meta?.modes ?? []).map((m) => (
                     <button
                       key={m.value}
-                      className={`mode-card ${tierClass(m.value)}${draft.permissionMode === m.value ? ' on' : ''}`}
+                      className={`mode-card ${tierClass(m.value)}${draft.permissionMode === m.value ? ' on' : ''}${
+                        m.value === 'auto' ? ' danger-mode' : ''
+                      }`}
+                      title={
+                        m.value === 'auto'
+                          ? '保留未实现：设为 auto 后该角色全部工具调用会被客户端拒绝（mode.auto.unimplemented）'
+                          : undefined
+                      }
                       onClick={() => patch({ permissionMode: m.value })}
                     >
                       <div className="mode-label">{m.label}</div>

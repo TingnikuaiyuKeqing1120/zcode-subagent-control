@@ -89,7 +89,14 @@ export function ModePill({
         { value: 'acceptEdits', label: '接受编辑', desc: '自动接受文件编辑——客户端归 build 档，仍会逐次确认。', icon: '📝', tier: 'build' },
         { value: 'autoEdit', label: '自动编辑', desc: '自动编辑（客户端归 build 档）。', icon: '✏️', tier: 'build' },
         { value: 'build', label: '构建模式', desc: '改文件前先问我。', icon: '🔨', tier: 'build' },
-        { value: 'auto', label: '自动', desc: '自动选择权限模式。', icon: '🤖', tier: 'auto' },
+        {
+          value: 'auto',
+          label: '自动（勿选）',
+          desc: '保留未实现：客户端会拒绝该角色的全部工具调用（mode.auto.unimplemented）。',
+          icon: '⛔',
+          tier: 'auto',
+          danger: true,
+        },
       ] as const)
     : []
 
@@ -114,9 +121,21 @@ export function ModePill({
           {[...QUICK_MODES, ...extended].map((m) => (
             <button
               key={m.value}
-              className={`mode-pop-item tier-${m.tier}${mode === m.value ? ' on' : ''}`}
+              className={`mode-pop-item tier-${m.tier}${mode === m.value ? ' on' : ''}${
+                'danger' in m && m.danger ? ' danger-item' : ''
+              }`}
+              title={'danger' in m && m.danger ? '该档位在客户端为保留未实现，选中会导致角色所有工具调用被拒绝' : undefined}
               onClick={(e) => {
                 e.stopPropagation()
+                if ('danger' in m && m.danger) {
+                  const ok = window.confirm(
+                    'auto（自动模式）在 ZCode 客户端是"保留未实现"：\n\n' +
+                      '任何角色设为 auto，它派发后的全部工具调用都会被直接拒绝\n' +
+                      '（错误码 mode.auto.unimplemented），不是弹窗、是报错。\n\n' +
+                      '确定仍要设为 auto 吗？',
+                  )
+                  if (!ok) return
+                }
                 pick(m.value)
               }}
             >

@@ -168,3 +168,16 @@ func TestValidate(t *testing.T) {
 }
 
 func intp(n int) *int { return &n }
+
+func TestValidateRejectsAutoMode(t *testing.T) {
+	api, _ := newTestAPI(t)
+	got := api.Validate(agentfile.Agent{
+		Name:           "x",
+		FileName:       "x",
+		PermissionMode: strp("auto"),
+		Tools:          []string{"Read"},
+	})
+	if len(got) == 0 || got[0].Level != "error" {
+		t.Fatalf("auto 应触发 error 级校验, got %+v", got)
+	}
+}
