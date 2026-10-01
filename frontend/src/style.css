@@ -707,6 +707,10 @@ textarea {
 .mode-pop {
   position: fixed;
   width: 264px;
+  /* 长列表（十档）自身滚动，不超出视口；滚轮事件优先给弹层 */
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 12px;

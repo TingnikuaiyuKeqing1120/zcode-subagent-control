@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   DeleteAgent,
+  FloatPanelVisible,
   GetAgent,
   ListAgents,
   Meta,
@@ -8,6 +9,7 @@ import {
   SetAllPermissionModes,
   SetPermissionMode,
   ThoughtLevels,
+  ToggleFloatPanel,
   Validate,
 } from '../bindings/zcode-subagent-control/api'
 import type { Agent as AgentModel } from '../bindings/zcode-subagent-control/internal/agentfile/models'
@@ -137,6 +139,7 @@ function App() {
   const [issues, setIssues] = useState<Issue[]>([])
   const [thoughtLevels, setThoughtLevels] = useState<string[]>([])
   const [filter, setFilter] = useState('')
+  const [floatVisible, setFloatVisible] = useState(false)
   const [toast, setToast] = useState<{ kind: 'ok' | 'err'; msg: string } | null>(null)
   const [busy, setBusy] = useState(false)
   const toastTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
@@ -161,6 +164,11 @@ function App() {
         setMeta(await Meta())
       } catch (e) {
         flash('err', `读取配置失败: ${String(e)}`)
+      }
+      try {
+        setFloatVisible(await FloatPanelVisible())
+      } catch {
+        /* 悬浮面板状态获取失败不阻塞主界面 */
       }
       await reloadList()
     })()
@@ -306,6 +314,19 @@ function App() {
           </div>
         </div>
         <div className="topbar-actions">
+          <button
+            className="btn btn-ghost"
+            title="打开/收起悬浮速切面板（托盘图标也可唤出）"
+            onClick={async () => {
+              try {
+                setFloatVisible(await ToggleFloatPanel())
+              } catch (e) {
+                flash('err', `切换悬浮面板失败: ${String(e)}`)
+              }
+            }}
+          >
+            ◈ 悬浮速切{floatVisible ? '（已开）' : ''}
+          </button>
           <button className="btn btn-danger" onClick={() => switchMode('yolo', 'all')}>
             全部 → 完全访问
           </button>

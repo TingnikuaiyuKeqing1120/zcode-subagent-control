@@ -101,7 +101,7 @@ export function SetPermissionMode(fileName: string, mode: string): $CancellableP
 }
 
 /**
- * ShowMainWindow 从悬浮面板打开主窗口。
+ * ShowMainWindow 从悬浮面板切换到主窗口（切换语义：收起悬浮面板再显示主窗口）。
  */
 export function ShowMainWindow(): $CancellablePromise<void> {
     return $Call.ByID(1498906584);

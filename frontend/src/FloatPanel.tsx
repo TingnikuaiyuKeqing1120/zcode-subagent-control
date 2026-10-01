@@ -77,7 +77,7 @@ export default function FloatPanel() {
       <header className="float-header drag">
         <span className="float-title">◈ 子智能体速切</span>
         <div className="float-header-actions no-drag">
-          <button title="打开主窗口" onClick={() => ShowMainWindow()}>
+          <button title="切换到主窗口" onClick={() => ShowMainWindow()}>
             ⤢
           </button>
           <button title="收起面板" onClick={() => HideFloatPanel()}>

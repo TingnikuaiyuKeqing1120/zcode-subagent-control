@@ -251,8 +251,11 @@ func (a *API) HideFloatPanel() {
 	}
 }
 
-// ShowMainWindow 从悬浮面板打开主窗口。
+// ShowMainWindow 从悬浮面板切换到主窗口（切换语义：收起悬浮面板再显示主窗口）。
 func (a *API) ShowMainWindow() {
+	if a.floatWin != nil && a.floatWin.IsVisible() {
+		a.floatWin.Hide()
+	}
 	if a.mainWin == nil {
 		return
 	}

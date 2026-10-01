@@ -68,6 +68,15 @@ export function ModePill({
     })
   }, [open])
 
+  // 首帧用估算高度定位，弹层真实渲染后再按实际高度夹一次底边
+  useLayoutEffect(() => {
+    if (!open || !pos || !popRef.current) return
+    const bottom = pos.y + popRef.current.offsetHeight
+    if (bottom > window.innerHeight - 8) {
+      setPos({ ...pos, y: Math.max(8, window.innerHeight - 8 - popRef.current.offsetHeight) })
+    }
+  }, [open, pos])
+
   const pick = (value: string) => {
     setOpen(false)
     onChange?.(value)
